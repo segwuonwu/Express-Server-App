@@ -5,13 +5,20 @@ const feedbackRoute = require('./feedback');
 
 const router = express.Router();
 
-module.exports = () => {
+module.exports = (params) => {
     router.get('/', (req, res) => {
-        res.render('pages/index', { pageTitle: 'Welcome' });
+
+        // if (!req.session.visitcount) {
+        //     req.session.visitcount = 0;
+        // }
+        // req.session.visitcount += 1;
+        // console.log(`Number of visits: ${req.session.visitcount}`);
+
+        res.render('layout', { pageTitle: 'Welcome', template: 'index' });
     });
 
-    router.use('/speakers', speakerRoute());
-    router.use('/feedback', feedbackRoute());
+    router.use('/speakers', speakerRoute(params));
+    router.use('/feedback', feedbackRoute(params));
 
     return router;
 }
