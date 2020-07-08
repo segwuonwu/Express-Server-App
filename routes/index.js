@@ -7,7 +7,7 @@ const router = express.Router();
 
 module.exports = (params) => {
     const { speakersService } = params;
-    router.get('/', async (req, res) => {
+    router.get('/', async (req, res, next) => {
 
         // if (!req.session.visitcount) {
         //     req.session.visitcount = 0;
@@ -15,9 +15,13 @@ module.exports = (params) => {
         // req.session.visitcount += 1;
         // console.log(`Number of visits: ${req.session.visitcount}`);
 
-        const artwork = await speakersService.getAllArtwork();
-        const topSpeakers = await speakersService.getList();
-        res.render('layout', { pageTitle: 'Welcome', template: 'index', topSpeakers, artwork });
+        try {
+            const artwork = await speakersService.getAllArtwork();
+            const topSpeakers = await speakersService.getList();
+            return res.render('layout', { pageTitle: 'Welcome', template: 'index', topSpeakers, artwork });
+        } catch (error) {
+            return next(error);
+        }
     });
 
     router.use('/speakers', speakerRoute(params));
